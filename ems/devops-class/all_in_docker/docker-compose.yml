@@ -1,0 +1,44 @@
+version: '3'
+services:
+  frontend:
+    build: ./client/
+    restart: always
+    ports:
+      - 3000:80
+    networks:
+      - my_network
+
+  backend:
+    build: ./server/
+    restart: always
+    ports:
+      - 3001:3001
+    networks:
+      - my_network
+
+  mysql:
+    image: mysql/mysql-server:5.7
+    command: --init-file /data/application/init.sql
+    restart: always
+    environment:
+      MYSQL_DATABASE: employeeSystem
+      MYSQL_ROOT_PASSWORD: mauFJcuf5dhRMQrjj
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_USER: test
+      MYSQL_PASSWORD: mauFJcuf5dhRMQrjj
+      MYSQL_USER_HOST: '%'
+    ports:
+      - 3306:3306
+    volumes:
+      - ./init.sql:/data/application/init.sql
+      - mysql_server_data:/var/lib/mysql
+    networks:
+      - my_network
+
+
+volumes: 
+  mysql_server_data:
+
+networks:
+  my_network: 
+    driver: bridge
